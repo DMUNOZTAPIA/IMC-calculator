@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function guardarUsuario(nombre, imc) {
     const id = Date.now();
-    usuarios.push({ id, nombre, imc: imc.toFixed(2) });
+    usuarios.push({ id, nombre, imc });
     localStorage.setItem("usuariosIMC", JSON.stringify(usuarios));
   }
 
@@ -39,19 +39,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderRanking() {
     listaRanking.innerHTML = "";
 
-    const saludables = usuarios
-      .filter(
-        (u) => u.imc >= RANGO_SALUDABLE.min && u.imc <= RANGO_SALUDABLE.max
-      )
-      .sort((a, b) => Math.abs(21.7 - a.imc) - Math.abs(21.7 - b.imc));
+    const saludables = usuarios.sort(
+      (a, b) => Math.abs(21.7 - a.imc) - Math.abs(21.7 - b.imc)
+    );
 
     saludables.forEach((usuario, index) => {
       const clasificacion = clasificarIMC(usuario.imc);
       const li = document.createElement("li");
       li.innerHTML = `
-                <span>#${index + 1} - ${usuario.nombre}: IMC ${
+                <span>#${index + 1} - ${usuario.nombre}: IMC ${Math.floor(
         usuario.imc
-      } (${clasificacion})</span>
+      )} (${clasificacion})</span>
                 <button onclick="eliminarUsuario(${
                   usuario.id
                 })">Eliminar</button>
